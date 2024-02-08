@@ -263,6 +263,10 @@ func (c *Client) Do(r *http.Request, v interface{}) (*Response, error) {
 
 		resp, err := c.httpClient.Do(r)
 		if err != nil {
+			if strings.Contains(err.Error(), "EOF") {
+				println("Retry")
+				return c.Do(r, v)
+			}
 			return nil, err
 		}
 		response := &Response{Response: resp}
